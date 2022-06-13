@@ -1,0 +1,3 @@
+/mnt/c/Projects/sgx/lit/CMakeFiles//mnt/c/Projects/sgx/lit/bin/lit.dir
+/mnt/c/Projects/sgx/lit/CMakeFiles/edit_cache.dir
+/mnt/c/Projects/sgx/lit/CMakeFiles/rebuild_cache.dir
