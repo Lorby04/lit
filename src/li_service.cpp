@@ -72,6 +72,7 @@ void Service::worker(int aId){
     }catch(ShutdownException e){
         cout << "Channel is shutdown. " << std::endl;
     }
+    return;
 }
 
 bool Service::query(Target &aTarget){

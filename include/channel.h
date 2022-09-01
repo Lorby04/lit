@@ -17,16 +17,18 @@ const size_t defaultSize = 1;
 class ShutdownException{};
 class CloseException{};
 
-const size_t SemaphoreLimit = 1000;
+const size_t SemaphoreLimitAccess = 10;
+const size_t BatchNotification = 10;
+
 template <class T>
 class Channel{
 public:    
     typedef std::unique_ptr<T> PT;
 private:
 //    std::condition_variable mCv;
-    std::counting_semaphore<SemaphoreLimit> mCtSemaphore;
+    std::counting_semaphore<SemaphoreLimitAccess> mQAccess;
     std::mutex mMutex;
-    std::binary_semaphore mSemaphore;
+    std::binary_semaphore mReadyToInQ;
     std::list<PT> mQ;
     bool mClosed;
     bool mShutdown;
@@ -37,8 +39,8 @@ private:
     atomic_uint64_t mPopedCount;
 private:
     Channel(size_t size):
-        mCtSemaphore(0),
-        mSemaphore(1){
+        mQAccess(0),
+        mReadyToInQ(1){
         if (size == 0){
             mSize = defaultSize;
         }else{
@@ -64,41 +66,28 @@ public:
 template <class T>
 Channel<T>::PT Channel<T>::receive(){
     PT ptr;
-    bool notify = false;
     for(;;){
-//        cout <<  "Waiting for lock to receive:"<< dump() << endl;
-//        std::unique_lock lk(mMutex);
-//        cout <<  "Waiting for condition to receive:"<< dump() << endl;
-//        mCv.wait(lk);
-//        cout <<  "Checking to receive:"<< dump() << endl;
-        mCtSemaphore.acquire();
+        mQAccess.acquire();
         std::unique_lock lk(mMutex);
         if (mShutdown){
-//            mCv.notify_all();
-            mCtSemaphore.release(1);
+            mQAccess.release(BatchNotification);
             throw ShutdownException();
         }
         if (mQ.empty()){
             if (mClosed){
-//                mCv.notify_all();
-                mCtSemaphore.release(1);
+                mQAccess.release(BatchNotification);
                 throw CloseException();
             }else{
                 continue;
             }
         }else{
             ptr = std::move(mQ.front());
-//            cout <<  "Size before taking:"<< mQ.size() << endl;
-
             mQ.pop_front();
-//            cout <<  "Size after taking:"<< mQ.size() << endl;
             mPopedCount++;
             break;
         }
     }
-//    mCv.notify_one();
-//    mCtSemaphore.release();
-    mSemaphore.release();
+    mReadyToInQ.release();
     return ptr;
 }
 template <class T>
@@ -108,7 +97,6 @@ bool Channel<T>::send(Channel<T>::PT aT){
     for(;!mClosed;){
         {
             std::unique_lock lk(mMutex);
-//            cout <<  "Checking to send:"<< dump() << endl;
             if (mQ.size() < mSize){
                 mQ.push_back(std::move(aT));
                 mPushedCount++;
@@ -117,15 +105,11 @@ bool Channel<T>::send(Channel<T>::PT aT){
                 assert(mQ.size() >= mSize);
             }
         }
-
-//        cout <<sent << ": End of loop send:"<< dump() << endl;
-//        mCv.notify_one();
-
         if (sent){
-            mCtSemaphore.release();
-            break;
+            mQAccess.release(1);
+            return sent;
         }else{
-            mSemaphore.acquire();
+            mReadyToInQ.acquire();
         }
     }
     return sent;
@@ -136,8 +120,7 @@ void Channel<T>::close(){
         std::unique_lock lk(mMutex);
         mClosed = true;
     }
-//    mCv.notify_all();
-    mCtSemaphore.release(SemaphoreLimit);
+    mQAccess.release(BatchNotification);
 }
 template <class T>
 void Channel<T>::shutdown(){
@@ -146,8 +129,7 @@ void Channel<T>::shutdown(){
         mClosed = true;
         mShutdown = true;
     }
-//    mCv.notify_all();
-    mCtSemaphore.release(SemaphoreLimit);
+    mQAccess.release(BatchNotification);
 }
 
 template <class T>
