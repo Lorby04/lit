@@ -19,6 +19,7 @@ Service::Service(int n):
     }else if n>=1000{
         mThreads =1000;
     }
+    mChannel = Channel::create(1024);
 }
 
 void Service::generateTargets(unsigned long long n){
@@ -45,29 +46,23 @@ void Service::generateTargets(unsigned long long n){
 	cout << "Writing entries:" << TargetSet::size() << ", time: ", << end-start  << endl;
 }
 
-void Service::wait(OP &aOp, Target &aTarget){
-    std::unique_lock lk(mMutex);
-    mCv.wait(lk);
-    aOp = mOp;
-    aTarget = mTarget;
-    if mOp != OP::STOP{
-        mOp = OP::NA;
-    }
-    return;
-}
 void Service::worker(){
-    OP op = OP::NA;
-    Target target;
-    for(;op != OP::STOP;) {
-        wait(op, target);
-        switch(op){
-            case OP::STOP:return;
-            case OP::QUERY:
-                query(target);
-                break;
-            default:
-                break;
+    try{
+        for(;;) {
+            auto m = receive();
+            switch(m.mOp){
+                case OP::STOP:return;
+                case OP::QUERY:
+                    query(*m.mTarget);
+                    break;
+                default:
+                    break;
+            }
         }
+    }catch(CloseException e){
+        cout << "Channel is closed. " << std::endl;
+    }catch(ShutdownException e){
+        cout << "Channel is shutdown. " << std::endl;
     }
 }
 
@@ -99,37 +94,25 @@ void Service::perfTest(int n){
             }
 
             for int t=0;t<numOfTypes;t++ {
-                {
-                    std::unique_lock lk(mMutex);
-                    mTarget = Target(to_string(low),Target::mType[t]);
-                    mOp = OP::QUERY;
-                }
-                mCv.notify_one();
+                std::unique_ptr<Target> t(new Target(to_string(low),Target::mType[t]));
+                std::unique_ptr<Message> m(t, OP::QUERY);
+                mChannel.send(m);
             }
+
             if high%10 == 0 {
                 high--
             }
 
             for int t=0;t<numOfTypes;t++ {
-                {
-                    std::unique_lock lk(mMutex);
-                    mTarget = Target(to_string(high),Target::mType[t]);
-                    mOp = OP::QUERY;
-                }
-                mCv.notify_one();
+                std::unique_ptr<Target> t(new Target(to_string(high),Target::mType[t]));
+                std::unique_ptr<Message> m(t, OP::QUERY);
+                mChannel.send(m);
             }
             low++
             high--
         }
     }
-
-    {
-        std::unique_lock lk(mMutex);
-        mOp = OP::STOP;
-    }
-    mCv.notify_all();
-    mCv.notify_all();
-
+    mChannel.close();
     for(;!threads.empty();){
         std::jthread th = threads.pop_front();
         th.join();

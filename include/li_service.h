@@ -8,6 +8,8 @@
 #include <shared_mutex>
 #include <thread>
 #include <condition_variable>
+#include <memory>
+#include "channel.h"
 #include "li_target.h"
 
 using namespace std;
@@ -19,12 +21,17 @@ enum OP{
     NA
 }
 
-class Service{
-    std::condition_variable mCv;
-    std::mutex mMutex;
-    Target mTarget;
+class Message{
+public:    
+    std::unique_ptr<Target> mTarget;
     OP mOp;
+public:
+    Message(std::unique_ptr<Target> aTarget, OP aOp):
+        mTarget(aTarget), mOp(aOp) {}
+}
 
+class Service{
+    Channel *mChannel;
     int mThreads;
 
     atomic_uint64_t mQueryAttemptCount;
