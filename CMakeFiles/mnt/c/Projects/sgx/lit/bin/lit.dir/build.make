@@ -69,52 +69,24 @@ include CMakeFiles/mnt/c/Projects/sgx/lit/bin/lit.dir/progress.make
 # Include the compile flags for this target's objects.
 include CMakeFiles/mnt/c/Projects/sgx/lit/bin/lit.dir/flags.make
 
-CMakeFiles//mnt/c/Projects/sgx/lit/bin/lit.dir/src/LiInputSimulator.cpp.o: CMakeFiles//mnt/c/Projects/sgx/lit/bin/lit.dir/flags.make
-CMakeFiles//mnt/c/Projects/sgx/lit/bin/lit.dir/src/LiInputSimulator.cpp.o: src/LiInputSimulator.cpp
-CMakeFiles//mnt/c/Projects/sgx/lit/bin/lit.dir/src/LiInputSimulator.cpp.o: CMakeFiles//mnt/c/Projects/sgx/lit/bin/lit.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/mnt/c/Projects/sgx/lit/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles//mnt/c/Projects/sgx/lit/bin/lit.dir/src/LiInputSimulator.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles//mnt/c/Projects/sgx/lit/bin/lit.dir/src/LiInputSimulator.cpp.o -MF CMakeFiles//mnt/c/Projects/sgx/lit/bin/lit.dir/src/LiInputSimulator.cpp.o.d -o CMakeFiles//mnt/c/Projects/sgx/lit/bin/lit.dir/src/LiInputSimulator.cpp.o -c /mnt/c/Projects/sgx/lit/src/LiInputSimulator.cpp
+CMakeFiles//mnt/c/Projects/sgx/lit/bin/lit.dir/src/li_service.cpp.o: CMakeFiles//mnt/c/Projects/sgx/lit/bin/lit.dir/flags.make
+CMakeFiles//mnt/c/Projects/sgx/lit/bin/lit.dir/src/li_service.cpp.o: src/li_service.cpp
+CMakeFiles//mnt/c/Projects/sgx/lit/bin/lit.dir/src/li_service.cpp.o: CMakeFiles//mnt/c/Projects/sgx/lit/bin/lit.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/mnt/c/Projects/sgx/lit/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles//mnt/c/Projects/sgx/lit/bin/lit.dir/src/li_service.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles//mnt/c/Projects/sgx/lit/bin/lit.dir/src/li_service.cpp.o -MF CMakeFiles//mnt/c/Projects/sgx/lit/bin/lit.dir/src/li_service.cpp.o.d -o CMakeFiles//mnt/c/Projects/sgx/lit/bin/lit.dir/src/li_service.cpp.o -c /mnt/c/Projects/sgx/lit/src/li_service.cpp
 
-CMakeFiles//mnt/c/Projects/sgx/lit/bin/lit.dir/src/LiInputSimulator.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles//mnt/c/Projects/sgx/lit/bin/lit.dir/src/LiInputSimulator.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /mnt/c/Projects/sgx/lit/src/LiInputSimulator.cpp > CMakeFiles//mnt/c/Projects/sgx/lit/bin/lit.dir/src/LiInputSimulator.cpp.i
+CMakeFiles//mnt/c/Projects/sgx/lit/bin/lit.dir/src/li_service.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles//mnt/c/Projects/sgx/lit/bin/lit.dir/src/li_service.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /mnt/c/Projects/sgx/lit/src/li_service.cpp > CMakeFiles//mnt/c/Projects/sgx/lit/bin/lit.dir/src/li_service.cpp.i
 
-CMakeFiles//mnt/c/Projects/sgx/lit/bin/lit.dir/src/LiInputSimulator.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles//mnt/c/Projects/sgx/lit/bin/lit.dir/src/LiInputSimulator.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /mnt/c/Projects/sgx/lit/src/LiInputSimulator.cpp -o CMakeFiles//mnt/c/Projects/sgx/lit/bin/lit.dir/src/LiInputSimulator.cpp.s
-
-CMakeFiles//mnt/c/Projects/sgx/lit/bin/lit.dir/src/LiPerfTest.cpp.o: CMakeFiles//mnt/c/Projects/sgx/lit/bin/lit.dir/flags.make
-CMakeFiles//mnt/c/Projects/sgx/lit/bin/lit.dir/src/LiPerfTest.cpp.o: src/LiPerfTest.cpp
-CMakeFiles//mnt/c/Projects/sgx/lit/bin/lit.dir/src/LiPerfTest.cpp.o: CMakeFiles//mnt/c/Projects/sgx/lit/bin/lit.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/mnt/c/Projects/sgx/lit/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles//mnt/c/Projects/sgx/lit/bin/lit.dir/src/LiPerfTest.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles//mnt/c/Projects/sgx/lit/bin/lit.dir/src/LiPerfTest.cpp.o -MF CMakeFiles//mnt/c/Projects/sgx/lit/bin/lit.dir/src/LiPerfTest.cpp.o.d -o CMakeFiles//mnt/c/Projects/sgx/lit/bin/lit.dir/src/LiPerfTest.cpp.o -c /mnt/c/Projects/sgx/lit/src/LiPerfTest.cpp
-
-CMakeFiles//mnt/c/Projects/sgx/lit/bin/lit.dir/src/LiPerfTest.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles//mnt/c/Projects/sgx/lit/bin/lit.dir/src/LiPerfTest.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /mnt/c/Projects/sgx/lit/src/LiPerfTest.cpp > CMakeFiles//mnt/c/Projects/sgx/lit/bin/lit.dir/src/LiPerfTest.cpp.i
-
-CMakeFiles//mnt/c/Projects/sgx/lit/bin/lit.dir/src/LiPerfTest.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles//mnt/c/Projects/sgx/lit/bin/lit.dir/src/LiPerfTest.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /mnt/c/Projects/sgx/lit/src/LiPerfTest.cpp -o CMakeFiles//mnt/c/Projects/sgx/lit/bin/lit.dir/src/LiPerfTest.cpp.s
-
-CMakeFiles//mnt/c/Projects/sgx/lit/bin/lit.dir/src/li_lib.cpp.o: CMakeFiles//mnt/c/Projects/sgx/lit/bin/lit.dir/flags.make
-CMakeFiles//mnt/c/Projects/sgx/lit/bin/lit.dir/src/li_lib.cpp.o: src/li_lib.cpp
-CMakeFiles//mnt/c/Projects/sgx/lit/bin/lit.dir/src/li_lib.cpp.o: CMakeFiles//mnt/c/Projects/sgx/lit/bin/lit.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/mnt/c/Projects/sgx/lit/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles//mnt/c/Projects/sgx/lit/bin/lit.dir/src/li_lib.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles//mnt/c/Projects/sgx/lit/bin/lit.dir/src/li_lib.cpp.o -MF CMakeFiles//mnt/c/Projects/sgx/lit/bin/lit.dir/src/li_lib.cpp.o.d -o CMakeFiles//mnt/c/Projects/sgx/lit/bin/lit.dir/src/li_lib.cpp.o -c /mnt/c/Projects/sgx/lit/src/li_lib.cpp
-
-CMakeFiles//mnt/c/Projects/sgx/lit/bin/lit.dir/src/li_lib.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles//mnt/c/Projects/sgx/lit/bin/lit.dir/src/li_lib.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /mnt/c/Projects/sgx/lit/src/li_lib.cpp > CMakeFiles//mnt/c/Projects/sgx/lit/bin/lit.dir/src/li_lib.cpp.i
-
-CMakeFiles//mnt/c/Projects/sgx/lit/bin/lit.dir/src/li_lib.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles//mnt/c/Projects/sgx/lit/bin/lit.dir/src/li_lib.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /mnt/c/Projects/sgx/lit/src/li_lib.cpp -o CMakeFiles//mnt/c/Projects/sgx/lit/bin/lit.dir/src/li_lib.cpp.s
+CMakeFiles//mnt/c/Projects/sgx/lit/bin/lit.dir/src/li_service.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles//mnt/c/Projects/sgx/lit/bin/lit.dir/src/li_service.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /mnt/c/Projects/sgx/lit/src/li_service.cpp -o CMakeFiles//mnt/c/Projects/sgx/lit/bin/lit.dir/src/li_service.cpp.s
 
 CMakeFiles//mnt/c/Projects/sgx/lit/bin/lit.dir/src/li_target.cpp.o: CMakeFiles//mnt/c/Projects/sgx/lit/bin/lit.dir/flags.make
 CMakeFiles//mnt/c/Projects/sgx/lit/bin/lit.dir/src/li_target.cpp.o: src/li_target.cpp
 CMakeFiles//mnt/c/Projects/sgx/lit/bin/lit.dir/src/li_target.cpp.o: CMakeFiles//mnt/c/Projects/sgx/lit/bin/lit.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/mnt/c/Projects/sgx/lit/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles//mnt/c/Projects/sgx/lit/bin/lit.dir/src/li_target.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/mnt/c/Projects/sgx/lit/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles//mnt/c/Projects/sgx/lit/bin/lit.dir/src/li_target.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles//mnt/c/Projects/sgx/lit/bin/lit.dir/src/li_target.cpp.o -MF CMakeFiles//mnt/c/Projects/sgx/lit/bin/lit.dir/src/li_target.cpp.o.d -o CMakeFiles//mnt/c/Projects/sgx/lit/bin/lit.dir/src/li_target.cpp.o -c /mnt/c/Projects/sgx/lit/src/li_target.cpp
 
 CMakeFiles//mnt/c/Projects/sgx/lit/bin/lit.dir/src/li_target.cpp.i: cmake_force
@@ -125,39 +97,35 @@ CMakeFiles//mnt/c/Projects/sgx/lit/bin/lit.dir/src/li_target.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles//mnt/c/Projects/sgx/lit/bin/lit.dir/src/li_target.cpp.s"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /mnt/c/Projects/sgx/lit/src/li_target.cpp -o CMakeFiles//mnt/c/Projects/sgx/lit/bin/lit.dir/src/li_target.cpp.s
 
-CMakeFiles//mnt/c/Projects/sgx/lit/bin/lit.dir/src/test.cpp.o: CMakeFiles//mnt/c/Projects/sgx/lit/bin/lit.dir/flags.make
-CMakeFiles//mnt/c/Projects/sgx/lit/bin/lit.dir/src/test.cpp.o: src/test.cpp
-CMakeFiles//mnt/c/Projects/sgx/lit/bin/lit.dir/src/test.cpp.o: CMakeFiles//mnt/c/Projects/sgx/lit/bin/lit.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/mnt/c/Projects/sgx/lit/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles//mnt/c/Projects/sgx/lit/bin/lit.dir/src/test.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles//mnt/c/Projects/sgx/lit/bin/lit.dir/src/test.cpp.o -MF CMakeFiles//mnt/c/Projects/sgx/lit/bin/lit.dir/src/test.cpp.o.d -o CMakeFiles//mnt/c/Projects/sgx/lit/bin/lit.dir/src/test.cpp.o -c /mnt/c/Projects/sgx/lit/src/test.cpp
+CMakeFiles//mnt/c/Projects/sgx/lit/bin/lit.dir/src/lit.cpp.o: CMakeFiles//mnt/c/Projects/sgx/lit/bin/lit.dir/flags.make
+CMakeFiles//mnt/c/Projects/sgx/lit/bin/lit.dir/src/lit.cpp.o: src/lit.cpp
+CMakeFiles//mnt/c/Projects/sgx/lit/bin/lit.dir/src/lit.cpp.o: CMakeFiles//mnt/c/Projects/sgx/lit/bin/lit.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/mnt/c/Projects/sgx/lit/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles//mnt/c/Projects/sgx/lit/bin/lit.dir/src/lit.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles//mnt/c/Projects/sgx/lit/bin/lit.dir/src/lit.cpp.o -MF CMakeFiles//mnt/c/Projects/sgx/lit/bin/lit.dir/src/lit.cpp.o.d -o CMakeFiles//mnt/c/Projects/sgx/lit/bin/lit.dir/src/lit.cpp.o -c /mnt/c/Projects/sgx/lit/src/lit.cpp
 
-CMakeFiles//mnt/c/Projects/sgx/lit/bin/lit.dir/src/test.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles//mnt/c/Projects/sgx/lit/bin/lit.dir/src/test.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /mnt/c/Projects/sgx/lit/src/test.cpp > CMakeFiles//mnt/c/Projects/sgx/lit/bin/lit.dir/src/test.cpp.i
+CMakeFiles//mnt/c/Projects/sgx/lit/bin/lit.dir/src/lit.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles//mnt/c/Projects/sgx/lit/bin/lit.dir/src/lit.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /mnt/c/Projects/sgx/lit/src/lit.cpp > CMakeFiles//mnt/c/Projects/sgx/lit/bin/lit.dir/src/lit.cpp.i
 
-CMakeFiles//mnt/c/Projects/sgx/lit/bin/lit.dir/src/test.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles//mnt/c/Projects/sgx/lit/bin/lit.dir/src/test.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /mnt/c/Projects/sgx/lit/src/test.cpp -o CMakeFiles//mnt/c/Projects/sgx/lit/bin/lit.dir/src/test.cpp.s
+CMakeFiles//mnt/c/Projects/sgx/lit/bin/lit.dir/src/lit.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles//mnt/c/Projects/sgx/lit/bin/lit.dir/src/lit.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /mnt/c/Projects/sgx/lit/src/lit.cpp -o CMakeFiles//mnt/c/Projects/sgx/lit/bin/lit.dir/src/lit.cpp.s
 
 # Object files for target /mnt/c/Projects/sgx/lit/bin/lit
 /mnt/c/Projects/sgx/lit/bin/lit_OBJECTS = \
-"CMakeFiles/mnt/c/Projects/sgx/lit/bin/lit.dir/src/LiInputSimulator.cpp.o" \
-"CMakeFiles/mnt/c/Projects/sgx/lit/bin/lit.dir/src/LiPerfTest.cpp.o" \
-"CMakeFiles/mnt/c/Projects/sgx/lit/bin/lit.dir/src/li_lib.cpp.o" \
+"CMakeFiles/mnt/c/Projects/sgx/lit/bin/lit.dir/src/li_service.cpp.o" \
 "CMakeFiles/mnt/c/Projects/sgx/lit/bin/lit.dir/src/li_target.cpp.o" \
-"CMakeFiles/mnt/c/Projects/sgx/lit/bin/lit.dir/src/test.cpp.o"
+"CMakeFiles/mnt/c/Projects/sgx/lit/bin/lit.dir/src/lit.cpp.o"
 
 # External object files for target /mnt/c/Projects/sgx/lit/bin/lit
 /mnt/c/Projects/sgx/lit/bin/lit_EXTERNAL_OBJECTS =
 
-/mnt/c/Projects/sgx/lit/bin/lit: CMakeFiles//mnt/c/Projects/sgx/lit/bin/lit.dir/src/LiInputSimulator.cpp.o
-/mnt/c/Projects/sgx/lit/bin/lit: CMakeFiles//mnt/c/Projects/sgx/lit/bin/lit.dir/src/LiPerfTest.cpp.o
-/mnt/c/Projects/sgx/lit/bin/lit: CMakeFiles//mnt/c/Projects/sgx/lit/bin/lit.dir/src/li_lib.cpp.o
+/mnt/c/Projects/sgx/lit/bin/lit: CMakeFiles//mnt/c/Projects/sgx/lit/bin/lit.dir/src/li_service.cpp.o
 /mnt/c/Projects/sgx/lit/bin/lit: CMakeFiles//mnt/c/Projects/sgx/lit/bin/lit.dir/src/li_target.cpp.o
-/mnt/c/Projects/sgx/lit/bin/lit: CMakeFiles//mnt/c/Projects/sgx/lit/bin/lit.dir/src/test.cpp.o
+/mnt/c/Projects/sgx/lit/bin/lit: CMakeFiles//mnt/c/Projects/sgx/lit/bin/lit.dir/src/lit.cpp.o
 /mnt/c/Projects/sgx/lit/bin/lit: CMakeFiles//mnt/c/Projects/sgx/lit/bin/lit.dir/build.make
 /mnt/c/Projects/sgx/lit/bin/lit: CMakeFiles//mnt/c/Projects/sgx/lit/bin/lit.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/mnt/c/Projects/sgx/lit/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Linking CXX executable /mnt/c/Projects/sgx/lit/bin/lit"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/mnt/c/Projects/sgx/lit/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Linking CXX executable /mnt/c/Projects/sgx/lit/bin/lit"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles//mnt/c/Projects/sgx/lit/bin/lit.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.

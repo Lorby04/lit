@@ -1,59 +1,67 @@
-#include <std>
+
 #include <string>
 #include <map>
 #include <mutex>
 #include <shared_mutex>
 #include <thread>
 #include <condition_variable>
+#include <vector>
+#include "li_target.h"
 #include "li_service.h"
 
+Service* Service::mInstance = nullptr;
+std::once_flag Service::mfInst;
+
 Service::Service(int n):
-    mTarget(),
-    mOp(OP::NA),
     mThreads(n),
     mQueryAttemptCount(0),
     mFoundCount(0)
 {
     if (n<1){
         mThreads =1;
-    }else if n>=1000{
+    }else if (n>=1000){
         mThreads =1000;
     }
-    mChannel = Channel::create(1024);
+    mChannel = Channel<Message>::create(1000);
+    mTotalEntries = 10000000;
 }
 
-void Service::generateTargets(unsigned long long n){
+void Service::generateTargets(uint64_t n){
     unsigned long digit = 1000000001;
-    auto numOfTypes = std::ssize(Target::mTypes);
+    auto numOfTypes = TargetSet::types().size();
 
     if (n >= 1000 ){
-		totalEntries = n;
+		mTotalEntries = n;
 	}
 
-    TargetSet::insert(new Target(to_string(digit), types[0]));
-	digit++
+    TargetSet::insert(Target(to_string(digit), TargetSet::types()[0]));
+	digit++;
 
-	auto start := std::chrono::system_clock::now();
- 	for (unsigned long i := 1; i < totalTargets; i++ ){
-		if digit%10 == 0 {
-			digit++
+	auto start = std::chrono::high_resolution_clock::now();
+ 	for (uint64_t i = 1; i < mTotalEntries; i++ ){
+		if (digit%10 == 0) {
+			digit++;
 		}
-        TargetSet::insert(new Target(to_string(digit), types[i%numOfTypes]));
+        TargetSet::insert(Target(to_string(digit), TargetSet::types()[i%numOfTypes]));
 
-		digit++
+		digit++;
 	}
-
-	cout << "Writing entries:" << TargetSet::size() << ", time: ", << end-start  << endl;
+	auto end = std::chrono::high_resolution_clock::now();
+    auto elapsed = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start).count();
+	cout <<"Writing entries:" << TargetSet::size() << " time: "  << elapsed <<"ns (Requested:" << mTotalEntries << ")" << endl;
 }
 
-void Service::worker(){
+void Service::worker(int aId){
     try{
+        cout << "Thread " << aId << ": started" << endl;
+        int received = 0;
         for(;;) {
-            auto m = receive();
-            switch(m.mOp){
+            auto m = mChannel->receive();
+            ++received;
+            switch(m->mOp){
                 case OP::STOP:return;
                 case OP::QUERY:
-                    query(*m.mTarget);
+                    query(*m->mTarget);
                     break;
                 default:
                     break;
@@ -66,69 +74,70 @@ void Service::worker(){
     }
 }
 
-bool Service::query(const Target &aTarget){
-    mQueryAttemptCount.Add(1,std::memory_order_seq);
-    if TargetSet::getInstance()->query(&aTarget){
-        mFoundCount.Add(1,std::memory_order_seq);
+bool Service::query(Target &aTarget){
+    mQueryAttemptCount++;
+    if (TargetSet::found(aTarget)){
+        mFoundCount++;
         return true;
     }
     return false;
 }
 
 void Service::perfTest(int n){
-#define TID "tid["<<tid<<"]"<<
     unsigned long low  = 1000000001;
     unsigned long high = 9999999999;
-    auto numOfTypes = std::ssize(Target::mTypes);
+    auto numOfTypes = TargetSet::types().size();
     std::vector<std::jthread> threads;
     for (unsigned int i = 0; i < mThreads;i++){
-        threads.push_back(std::jthread(worker()))
+        threads.push_back(std::jthread(Service::thread_entry,this,i));
     }
     
-	auto start := std::chrono::system_clock::now();
-    cout << TID "Test starts from : " << low << " at: " << full_start << endl;
+	auto start = std::chrono::high_resolution_clock::now();
     for (int round = 0; round < n; round++){
-        for (int i = 0; i<totalEntries;i++){
-            if low%10 == 0 {
-                low++
+        for (uint64_t i = 0; i<mTotalEntries;i++){
+            if (low%10 == 0) {
+                low++;
             }
 
-            for int t=0;t<numOfTypes;t++ {
-                std::unique_ptr<Target> t(new Target(to_string(low),Target::mType[t]));
-                std::unique_ptr<Message> m(t, OP::QUERY);
-                mChannel.send(m);
+//            cout << "Query Round:"<<round<<", ith:"<<i<<std::endl;
+            for (int t=0;t<numOfTypes;t++) {
+                std::unique_ptr<Target> target(new Target(to_string(low),TargetSet::types()[t]));
+                std::unique_ptr<Message> m(new Message(std::move(target), OP::QUERY));
+                mChannel->send(std::move(m));
             }
 
-            if high%10 == 0 {
-                high--
+            if (high%10 == 0) {
+                high--;
             }
 
-            for int t=0;t<numOfTypes;t++ {
-                std::unique_ptr<Target> t(new Target(to_string(high),Target::mType[t]));
-                std::unique_ptr<Message> m(t, OP::QUERY);
-                mChannel.send(m);
+            for (int t=0;t<numOfTypes;t++) {
+                std::unique_ptr<Target> target(new Target(to_string(high),TargetSet::types()[t]));
+                std::unique_ptr<Message> m(new Message(std::move(target), OP::QUERY));
+                mChannel->send(std::move(m));
             }
-            low++
-            high--
+            low++;
+            high--;
         }
     }
-    mChannel.close();
+    mChannel->close();
     for(;!threads.empty();){
-        std::jthread th = threads.pop_front();
+        std::jthread &th = threads.back();
         th.join();
+        threads.pop_back();
     }
-	auto end := std::chrono::system_clock::now();
-	cout << "Searching time:" << end-start << "Statistics: "<< statistics() << std::endl;
+	auto end = std::chrono::high_resolution_clock::now();
+    auto elapsed = std::chrono::duration_cast<std::chrono::nanoseconds>(end-start).count();
+	cout << "Searching time:" << elapsed << "ns ,Statistics: "<< statistics() << std::endl;
 }
 
 string Service::statistics()  {
     string str = "Query:"
-        + mQueryAttemptCount.load(std::memory_order_seq)
-        + ",Got:"
-        + mFoundCount.load(std::memory_order_seq)
-        + ",in "
-        + TargetSet::size()
-        + "entries";
+        + to_string(mQueryAttemptCount.load(std::memory_order_seq_cst))
+        + ", Got:"
+        + to_string(mFoundCount.load(std::memory_order_seq_cst))
+        + ", in "
+        + to_string(TargetSet::size())
+        + " entries";
 
     return str;
 }

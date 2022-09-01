@@ -8,11 +8,9 @@ set(CMAKE_DEPENDS_LANGUAGES
 
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
-  "/mnt/c/Projects/sgx/lit/src/LiInputSimulator.cpp" "CMakeFiles/mnt/c/Projects/sgx/lit/bin/lit.dir/src/LiInputSimulator.cpp.o" "gcc" "CMakeFiles/mnt/c/Projects/sgx/lit/bin/lit.dir/src/LiInputSimulator.cpp.o.d"
-  "/mnt/c/Projects/sgx/lit/src/LiPerfTest.cpp" "CMakeFiles/mnt/c/Projects/sgx/lit/bin/lit.dir/src/LiPerfTest.cpp.o" "gcc" "CMakeFiles/mnt/c/Projects/sgx/lit/bin/lit.dir/src/LiPerfTest.cpp.o.d"
-  "/mnt/c/Projects/sgx/lit/src/li_lib.cpp" "CMakeFiles/mnt/c/Projects/sgx/lit/bin/lit.dir/src/li_lib.cpp.o" "gcc" "CMakeFiles/mnt/c/Projects/sgx/lit/bin/lit.dir/src/li_lib.cpp.o.d"
+  "/mnt/c/Projects/sgx/lit/src/li_service.cpp" "CMakeFiles/mnt/c/Projects/sgx/lit/bin/lit.dir/src/li_service.cpp.o" "gcc" "CMakeFiles/mnt/c/Projects/sgx/lit/bin/lit.dir/src/li_service.cpp.o.d"
   "/mnt/c/Projects/sgx/lit/src/li_target.cpp" "CMakeFiles/mnt/c/Projects/sgx/lit/bin/lit.dir/src/li_target.cpp.o" "gcc" "CMakeFiles/mnt/c/Projects/sgx/lit/bin/lit.dir/src/li_target.cpp.o.d"
-  "/mnt/c/Projects/sgx/lit/src/test.cpp" "CMakeFiles/mnt/c/Projects/sgx/lit/bin/lit.dir/src/test.cpp.o" "gcc" "CMakeFiles/mnt/c/Projects/sgx/lit/bin/lit.dir/src/test.cpp.o.d"
+  "/mnt/c/Projects/sgx/lit/src/lit.cpp" "CMakeFiles/mnt/c/Projects/sgx/lit/bin/lit.dir/src/lit.cpp.o" "gcc" "CMakeFiles/mnt/c/Projects/sgx/lit/bin/lit.dir/src/lit.cpp.o.d"
   )
 
 # Targets to which this target links.

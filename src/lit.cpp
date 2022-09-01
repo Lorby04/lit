@@ -1,7 +1,11 @@
 #include <iostream>
 #include <thread>
 #include <vector>
-#include "li_lib.h"
+#include <string>
+#include <memory>
+#include <atomic>
+#include "li_target.h"
+#include "li_service.h"
 
 ////////////////////////////////
 // test -n val
@@ -21,7 +25,7 @@ const int sp    = 4;
 const int tp    = 6;
 
 
-void main((int argc, char **argv){
+int main(int argc, char **argv){
     if ((argc !=7) || (string(argv[1]) != "-n")){
         cout << usage << endl;
         exit(0);
@@ -33,17 +37,17 @@ void main((int argc, char **argv){
         exit(0);
     }
 
-	string ti = args[tp];
+	string ti = argv[tp];
     
-	int mk = [&]-> int {
-		if ti.back() == 'M' || ti.back() == 'm' {
-			return 1000000
-		} else if ti.back() == 'K' || ti.back() == 'k' {
-			return 1000
-		} else {
-			return 1
-		}
-	}();
+	int mk = 1;
+	if (ti.back() == 'M' || ti.back() == 'm') {
+		mk = 1000000;
+	} else if (ti.back() == 'K' || ti.back() == 'k') {
+		mk = 1000;
+	} else {
+		mk = 1;
+	}
+
 
     ti.pop_back();
 	int t = stoi(ti);
@@ -54,13 +58,13 @@ void main((int argc, char **argv){
 		t = 100000;
 	}
 
-    string si = args[sp];
+    string si = argv[sp];
 	int s = stoi(si);
 
-	cout << "Testing started with parameters:entries:"<< t*mk << "query loops:" << n <<
-		"service threads:" << s << std::endl;
+	cout << "Testing started with parameters:entries:"<< t*mk << ", query loops:" << n <<
+		", service threads:" << s << std::endl;
 
     Service::init(s)->generateTargets(t*mk);
 	Service::getInstance()->perfTest(n);
-	return;
+	return 0;
 }

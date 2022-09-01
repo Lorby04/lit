@@ -129,77 +129,29 @@ bin/lit/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles//mnt/c/Projects/sgx/lit/bin/lit.dir/build.make CMakeFiles//mnt/c/Projects/sgx/lit/bin/lit.dir/build
 .PHONY : bin/lit/fast
 
-src/LiInputSimulator.o: src/LiInputSimulator.cpp.o
-.PHONY : src/LiInputSimulator.o
+src/li_service.o: src/li_service.cpp.o
+.PHONY : src/li_service.o
 
 # target to build an object file
-src/LiInputSimulator.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles//mnt/c/Projects/sgx/lit/bin/lit.dir/build.make CMakeFiles//mnt/c/Projects/sgx/lit/bin/lit.dir/src/LiInputSimulator.cpp.o
-.PHONY : src/LiInputSimulator.cpp.o
+src/li_service.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles//mnt/c/Projects/sgx/lit/bin/lit.dir/build.make CMakeFiles//mnt/c/Projects/sgx/lit/bin/lit.dir/src/li_service.cpp.o
+.PHONY : src/li_service.cpp.o
 
-src/LiInputSimulator.i: src/LiInputSimulator.cpp.i
-.PHONY : src/LiInputSimulator.i
-
-# target to preprocess a source file
-src/LiInputSimulator.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles//mnt/c/Projects/sgx/lit/bin/lit.dir/build.make CMakeFiles//mnt/c/Projects/sgx/lit/bin/lit.dir/src/LiInputSimulator.cpp.i
-.PHONY : src/LiInputSimulator.cpp.i
-
-src/LiInputSimulator.s: src/LiInputSimulator.cpp.s
-.PHONY : src/LiInputSimulator.s
-
-# target to generate assembly for a file
-src/LiInputSimulator.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles//mnt/c/Projects/sgx/lit/bin/lit.dir/build.make CMakeFiles//mnt/c/Projects/sgx/lit/bin/lit.dir/src/LiInputSimulator.cpp.s
-.PHONY : src/LiInputSimulator.cpp.s
-
-src/LiPerfTest.o: src/LiPerfTest.cpp.o
-.PHONY : src/LiPerfTest.o
-
-# target to build an object file
-src/LiPerfTest.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles//mnt/c/Projects/sgx/lit/bin/lit.dir/build.make CMakeFiles//mnt/c/Projects/sgx/lit/bin/lit.dir/src/LiPerfTest.cpp.o
-.PHONY : src/LiPerfTest.cpp.o
-
-src/LiPerfTest.i: src/LiPerfTest.cpp.i
-.PHONY : src/LiPerfTest.i
+src/li_service.i: src/li_service.cpp.i
+.PHONY : src/li_service.i
 
 # target to preprocess a source file
-src/LiPerfTest.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles//mnt/c/Projects/sgx/lit/bin/lit.dir/build.make CMakeFiles//mnt/c/Projects/sgx/lit/bin/lit.dir/src/LiPerfTest.cpp.i
-.PHONY : src/LiPerfTest.cpp.i
+src/li_service.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles//mnt/c/Projects/sgx/lit/bin/lit.dir/build.make CMakeFiles//mnt/c/Projects/sgx/lit/bin/lit.dir/src/li_service.cpp.i
+.PHONY : src/li_service.cpp.i
 
-src/LiPerfTest.s: src/LiPerfTest.cpp.s
-.PHONY : src/LiPerfTest.s
-
-# target to generate assembly for a file
-src/LiPerfTest.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles//mnt/c/Projects/sgx/lit/bin/lit.dir/build.make CMakeFiles//mnt/c/Projects/sgx/lit/bin/lit.dir/src/LiPerfTest.cpp.s
-.PHONY : src/LiPerfTest.cpp.s
-
-src/li_lib.o: src/li_lib.cpp.o
-.PHONY : src/li_lib.o
-
-# target to build an object file
-src/li_lib.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles//mnt/c/Projects/sgx/lit/bin/lit.dir/build.make CMakeFiles//mnt/c/Projects/sgx/lit/bin/lit.dir/src/li_lib.cpp.o
-.PHONY : src/li_lib.cpp.o
-
-src/li_lib.i: src/li_lib.cpp.i
-.PHONY : src/li_lib.i
-
-# target to preprocess a source file
-src/li_lib.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles//mnt/c/Projects/sgx/lit/bin/lit.dir/build.make CMakeFiles//mnt/c/Projects/sgx/lit/bin/lit.dir/src/li_lib.cpp.i
-.PHONY : src/li_lib.cpp.i
-
-src/li_lib.s: src/li_lib.cpp.s
-.PHONY : src/li_lib.s
+src/li_service.s: src/li_service.cpp.s
+.PHONY : src/li_service.s
 
 # target to generate assembly for a file
-src/li_lib.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles//mnt/c/Projects/sgx/lit/bin/lit.dir/build.make CMakeFiles//mnt/c/Projects/sgx/lit/bin/lit.dir/src/li_lib.cpp.s
-.PHONY : src/li_lib.cpp.s
+src/li_service.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles//mnt/c/Projects/sgx/lit/bin/lit.dir/build.make CMakeFiles//mnt/c/Projects/sgx/lit/bin/lit.dir/src/li_service.cpp.s
+.PHONY : src/li_service.cpp.s
 
 src/li_target.o: src/li_target.cpp.o
 .PHONY : src/li_target.o
@@ -225,29 +177,29 @@ src/li_target.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles//mnt/c/Projects/sgx/lit/bin/lit.dir/build.make CMakeFiles//mnt/c/Projects/sgx/lit/bin/lit.dir/src/li_target.cpp.s
 .PHONY : src/li_target.cpp.s
 
-src/test.o: src/test.cpp.o
-.PHONY : src/test.o
+src/lit.o: src/lit.cpp.o
+.PHONY : src/lit.o
 
 # target to build an object file
-src/test.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles//mnt/c/Projects/sgx/lit/bin/lit.dir/build.make CMakeFiles//mnt/c/Projects/sgx/lit/bin/lit.dir/src/test.cpp.o
-.PHONY : src/test.cpp.o
+src/lit.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles//mnt/c/Projects/sgx/lit/bin/lit.dir/build.make CMakeFiles//mnt/c/Projects/sgx/lit/bin/lit.dir/src/lit.cpp.o
+.PHONY : src/lit.cpp.o
 
-src/test.i: src/test.cpp.i
-.PHONY : src/test.i
+src/lit.i: src/lit.cpp.i
+.PHONY : src/lit.i
 
 # target to preprocess a source file
-src/test.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles//mnt/c/Projects/sgx/lit/bin/lit.dir/build.make CMakeFiles//mnt/c/Projects/sgx/lit/bin/lit.dir/src/test.cpp.i
-.PHONY : src/test.cpp.i
+src/lit.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles//mnt/c/Projects/sgx/lit/bin/lit.dir/build.make CMakeFiles//mnt/c/Projects/sgx/lit/bin/lit.dir/src/lit.cpp.i
+.PHONY : src/lit.cpp.i
 
-src/test.s: src/test.cpp.s
-.PHONY : src/test.s
+src/lit.s: src/lit.cpp.s
+.PHONY : src/lit.s
 
 # target to generate assembly for a file
-src/test.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles//mnt/c/Projects/sgx/lit/bin/lit.dir/build.make CMakeFiles//mnt/c/Projects/sgx/lit/bin/lit.dir/src/test.cpp.s
-.PHONY : src/test.cpp.s
+src/lit.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles//mnt/c/Projects/sgx/lit/bin/lit.dir/build.make CMakeFiles//mnt/c/Projects/sgx/lit/bin/lit.dir/src/lit.cpp.s
+.PHONY : src/lit.cpp.s
 
 # Help Target
 help:
@@ -258,21 +210,15 @@ help:
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
 	@echo "... /mnt/c/Projects/sgx/lit/bin/lit"
-	@echo "... src/LiInputSimulator.o"
-	@echo "... src/LiInputSimulator.i"
-	@echo "... src/LiInputSimulator.s"
-	@echo "... src/LiPerfTest.o"
-	@echo "... src/LiPerfTest.i"
-	@echo "... src/LiPerfTest.s"
-	@echo "... src/li_lib.o"
-	@echo "... src/li_lib.i"
-	@echo "... src/li_lib.s"
+	@echo "... src/li_service.o"
+	@echo "... src/li_service.i"
+	@echo "... src/li_service.s"
 	@echo "... src/li_target.o"
 	@echo "... src/li_target.i"
 	@echo "... src/li_target.s"
-	@echo "... src/test.o"
-	@echo "... src/test.i"
-	@echo "... src/test.s"
+	@echo "... src/lit.o"
+	@echo "... src/lit.i"
+	@echo "... src/lit.s"
 .PHONY : help
 
 

@@ -1,5 +1,6 @@
 #include "li_target.h"
-
+TargetSet* TargetSet::mInstance = nullptr;
+std::once_flag TargetSet::mfInst;
 bool operator<(const Target &t1, const Target &t2){
     if (t1.type() < t2.type()) return true;
     if (t1.type() > t2.type()) return false;

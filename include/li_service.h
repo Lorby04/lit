@@ -1,7 +1,6 @@
-#ifndef __LI_TARGET__
-#define __LI_TARGET__
+#ifndef __LI_SERVICE__
+#define __LI_SERVICE__
 
-#include <std>
 #include <string>
 #include <map>
 #include <mutex>
@@ -19,7 +18,7 @@ enum OP{
     DEL,
     STOP,
     NA
-}
+};
 
 class Message{
 public:    
@@ -27,39 +26,43 @@ public:
     OP mOp;
 public:
     Message(std::unique_ptr<Target> aTarget, OP aOp):
-        mTarget(aTarget), mOp(aOp) {}
-}
+        mTarget(std::move(aTarget)), mOp(aOp) {}
+};
 
 class Service{
-    Channel *mChannel;
+    Channel<Message> *mChannel;
     int mThreads;
+    uint64_t mTotalEntries;
 
     atomic_uint64_t mQueryAttemptCount;
     atomic_uint64_t mFoundCount;
 
     static std::once_flag mfInst;
-    static Service* mInstance = NULL;
+    static Service* mInstance;
 
 private:    
     Service(int n);
     void start();
     static void create(int n){
-        mInstance = new Service(n);
+        Service::mInstance = new Service(n);
     }
-    void wait(OP &aOp, Target &aTarget);
-    void worker();
+    void worker(int aId);
     string statistics() ;
+    bool query(Target &aTarget);
 public: 
     static Service *init(int n){
-        std::call_once(mfInst,create);
-        return mInstance;
+        std::call_once(Service::mfInst,Service::create,n);
+        return Service::mInstance;
     }
     static Service *getInstance(){
-        return mInstance;
+        return Service::mInstance;
+    }
+    static void thread_entry(Service *aInst, int aId){
+        aInst->worker(aId);
     }
 public:
-    void generateTargets(unsigned long n);
+    void generateTargets(uint64_t n);
     void perfTest(int n);
-}
+};
 
 #endif //
