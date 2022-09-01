@@ -7,6 +7,7 @@
 #include <shared_mutex>
 #include <thread>
 #include <condition_variable>
+#include <semaphore>
 #include <memory>
 #include "channel.h"
 #include "li_target.h"
@@ -33,6 +34,8 @@ class Service{
     Channel<Message> *mChannel;
     int mThreads;
     uint64_t mTotalEntries;
+
+    std::counting_semaphore<1> mThreadEnd;
 
     atomic_uint64_t mQueryAttemptCount;
     atomic_uint64_t mFoundCount;
