@@ -66,14 +66,14 @@ fs.mounts = [
 # Create a debug SGX enclave (with SIGSTRUCT.ATTRIBUTES.DEBUG bit set to 1).
 # This allows to debug Gramine with the application using GDB, read perf
 # counters and enable SGX statistics. Note that this option is *insecure*!
-sgx.debug = true
+sgx.debug = false
 
 # Set enclave size (somewhat arbitrarily) to 1024MB. Recall that SGX v1 requires
 # to specify enclave size at enclave creation time. If Redis exhausts these
 # 1024MB then it will start failing with random errors. Greater enclave sizes
 # result in longer startup times, smaller enclave sizes are not enough for
 # typical Redis workloads.
-sgx.enclave_size = "32G"
+sgx.enclave_size = "16G"
 
 # Set maximum number of in-enclave threads (somewhat arbitrarily) to 8. Recall
 # that SGX v1 requires to specify the maximum number of simulteneous threads at
@@ -83,7 +83,7 @@ sgx.enclave_size = "32G"
 # and one for asynchronous events/alarms. Redis is technically single-threaded
 # but spawns couple additional threads to do background bookkeeping. Therefore,
 # specifying '8' allows to run a maximum of 6 Redis threads which is enough.
-sgx.thread_num = 128
+sgx.thread_num = 64
 
 # Redis executable is typically a PIE (Position Independent Executable) on most
 # modern OS distros (e.g., Ubuntu 18.04). However, on some OS distros (notably,
