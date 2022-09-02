@@ -4,4 +4,4 @@ make
 cd bin
 make clean;
 make SGX=1
-cd ..
+

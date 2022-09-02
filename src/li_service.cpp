@@ -90,10 +90,10 @@ void Service::perfTest(int n){
     unsigned long low  = 1000000001;
     unsigned long high = 9999999999;
     auto numOfTypes = TargetSet::types().size();
-    //std::vector<std::jthread> threads;
+    std::vector<std::jthread> threads;
     for (unsigned int i = 0; i < mThreads;i++){
-        //threads.push_back(std::jthread(Service::thread_entry,this,i));
-        std::jthread(Service::thread_entry,this,i).detach();
+        threads.push_back(std::jthread(Service::thread_entry,this,i));
+        //std::jthread(Service::thread_entry,this,i).detach();
     }
     
 	auto start = std::chrono::high_resolution_clock::now();
@@ -124,14 +124,14 @@ void Service::perfTest(int n){
         }
     }
     mChannel->close();
-/*    
+    
     for(;!threads.empty();){
         std::jthread &th = threads.back();
         th.join();
         threads.pop_back();
     }
-*/
-    mThreadEnd.acquire();// On close, one is ended means all are ended
+
+//    mThreadEnd.acquire();// On close, one is ended means all are ended
 	auto end = std::chrono::high_resolution_clock::now();
     auto elapsed = std::chrono::duration_cast<std::chrono::nanoseconds>(end-start).count();
 	cout << "Searching time:" << elapsed << "ns ,Statistics: "<< statistics() << std::endl;
