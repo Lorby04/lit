@@ -19,6 +19,8 @@
 # directory with arch-specific libraries, used by Redis
 # the below path works for Debian/Ubuntu; for CentOS/RHEL/Fedora, you should
 # overwrite this default like this: `ARCH_LIBDIR=/lib64 make`
+ARCH_LIBDIR ?= /lib/$(shell $(CC) -dumpmachine)
+RM = rm
 
 ifeq ($(DEBUG),1)
 GRAMINE_LOG_LEVEL = debug
@@ -42,6 +44,7 @@ endif
 lit.manifest: lit.manifest.template
 	gramine-manifest \
 		-Dlog_level=$(GRAMINE_LOG_LEVEL)  \
+		-Darch_libdir=$(ARCH_LIBDIR) \
 		$< > $@
 
 # Manifest for Gramine-SGX requires special "gramine-sgx-sign" procedure. This
