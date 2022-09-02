@@ -90,7 +90,9 @@ Channel<T>::PT Channel<T>::receive(){
         }
         return false;
     };
-
+    std::unique_lock lk(mMutex);
+    mQAccess.wait(lk,checkAndTake);
+/*
     for(;;){
         std::unique_lock lk(mMutex);
         if  (checkAndTake()){
@@ -101,6 +103,7 @@ Channel<T>::PT Channel<T>::receive(){
             break;
         }
     }
+*/
     mReadyToInQ.release();
     return ptr;
 }
