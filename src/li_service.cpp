@@ -12,7 +12,7 @@
 Service* Service::mInstance = nullptr;
 std::once_flag Service::mfInst;
 
-Service::Service(int n):
+Service::Service(string aChType, int n):
     mThreads(n),
     mQueryAttemptCount(0),
     mFoundCount(0),
@@ -23,7 +23,7 @@ Service::Service(int n):
     }else if (n>=1000){
         mThreads =1000;
     }
-    mChannel = Channel<Message>::create(12);
+    mChannel =  createChannel<Message>(aChType,12);
     mTotalEntries = 10000000;
 }
 

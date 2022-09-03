@@ -24,18 +24,32 @@ const uint64_t MaxCapacityBitWidth = 16;
 template <class T>
 class Channel{
 public:    
+    typedef std::unique_ptr<T> PT;    
+public:
+    virtual ~Channel(){}
+    virtual uint64_t size() const=0;
+    virtual PT receive() = 0;
+    virtual bool send(PT aT)=0;
+    virtual void close()=0;
+    virtual void shutdown()=0;
+    virtual string dump()=0;
+};
+
+template <class T>
+class RBChannel:public Channel<T>{
+public:    
     typedef std::unique_ptr<T> PT;
 private:
     std::condition_variable_any mQAccess;
 //    std::counting_semaphore<SemaphoreLimitAccess> mQAccess;
 
-    std::shared_mutex mMutex;
+    mutable std::shared_mutex mMutex;
 
     PT *mQ;
     atomic_uint64_t mRIndex; // index of entry that can be read unless it is the same as mWIndex
     uint64_t mWIndex; // index of entry that being written
     
-    std::binary_semaphore mReadyToInQ;
+    mutable std::binary_semaphore mReadyToInQ;
     bool mClosed;
     bool mShutdown;
     uint64_t mSize;
@@ -46,7 +60,7 @@ private:
     atomic_uint64_t mPopedCount;
     atomic_uint64_t mBlockSenderCount;
 private:
-    Channel(int aBitWidth):
+    RBChannel(int aBitWidth):
         mRIndex(0),
         mWIndex(0),
         mReadyToInQ(1),
@@ -64,8 +78,8 @@ private:
         mClosed = false;
         mShutdown = false;
     }
-    Channel (const Channel&) = delete;
-    Channel& operator=(const Channel&) = delete;
+    RBChannel (const RBChannel&) = delete;
+    RBChannel& operator=(const RBChannel&) = delete;
 
 private:
     bool full(uint64_t aWIndex, uint64_t aRIndex){
@@ -79,7 +93,7 @@ private:
     bool empty(uint64_t aWIndex, uint64_t aRIndex){
         return (aWIndex<=aRIndex);
     }
-    uint64_t len(uint64_t aWIndex, uint64_t aRIndex){
+    uint64_t len(uint64_t aWIndex, uint64_t aRIndex)const{
         uint64_t ln = aWIndex-aRIndex;
         assert(ln<=mSize);
         //cout <<"ln:" << ln <<"="<<aWIndex<<"-"<<aRIndex<<endl;
@@ -87,10 +101,10 @@ private:
     }
     uint64_t index(uint64_t aIndex){return aIndex & mMask;}
 public:
-    static Channel* create(uint64_t size){
-        return new Channel(size);
+    static RBChannel* create(uint64_t aBitWidth){
+        return new RBChannel(aBitWidth);
     }
-    ~Channel(){
+    ~RBChannel(){
         delete mQ;
     }
 
@@ -107,7 +121,7 @@ public:
 };
 
 template <class T>
-Channel<T>::PT Channel<T>::receive(){
+RBChannel<T>::PT RBChannel<T>::receive(){
     PT ptr;
     auto checkAndTake=[&]()->bool{
         if (mShutdown){
@@ -152,7 +166,7 @@ Channel<T>::PT Channel<T>::receive(){
     return ptr;
 }
 template <class T>
-bool Channel<T>::send(Channel<T>::PT aT){
+bool RBChannel<T>::send(RBChannel<T>::PT aT){
     mSentRequestCount++;
     for(;!mClosed;){
         {
@@ -184,16 +198,16 @@ bool Channel<T>::send(Channel<T>::PT aT){
     return false;
 }
 template <class T>
-void Channel<T>::close(){
+void RBChannel<T>::close(){
     {
         std::unique_lock lk(mMutex);
         mClosed = true;
-        //cout << "Close Channel" << std::endl;
+        //cout << "Close RBChannel" << std::endl;
     }
     mQAccess.notify_all();
 }
 template <class T>
-void Channel<T>::shutdown(){
+void RBChannel<T>::shutdown(){
     {
         std::unique_lock lk(mMutex);
         mClosed = true;
@@ -203,7 +217,7 @@ void Channel<T>::shutdown(){
 }
 
 template <class T>
-string Channel<T>::dump()  {
+string RBChannel<T>::dump()  {
     string str = "Sent Request:"
         + to_string(mSentRequestCount.load(std::memory_order_seq_cst))
         + ", Pushed:"
@@ -217,3 +231,164 @@ string Channel<T>::dump()  {
     return str;
 }
 #endif //
+
+template <class T>
+class LTChannel:public Channel<T>{
+public:    
+    typedef std::unique_ptr<T> PT;
+private:
+    std::condition_variable mQAccess;
+//    std::counting_semaphore<SemaphoreLimitAccess> mQAccess;
+    mutable std::mutex mMutex;
+    std::binary_semaphore mReadyToInQ;
+    std::list<PT> mQ;
+    bool mClosed;
+    bool mShutdown;
+    size_t mSize;
+
+    atomic_uint64_t mSentRequestCount;
+    atomic_uint64_t mPushedCount;
+    atomic_uint64_t mPopedCount;
+    atomic_uint64_t mBlockSenderCount;
+private:
+    LTChannel(uint64_t aBitWidth):
+        mReadyToInQ(1),
+        mSentRequestCount(0),
+        mPushedCount(0),
+        mPopedCount(0),
+        mBlockSenderCount(0)
+    {
+        if (aBitWidth > MaxCapacityBitWidth){
+            aBitWidth = MaxCapacityBitWidth;
+        }
+        mSize = (1 << aBitWidth);
+        mClosed = false;
+        mShutdown = false;
+    }
+    LTChannel (const LTChannel&) = delete;
+    LTChannel& operator=(const LTChannel&) = delete;
+public:
+    ~LTChannel(){};
+    static LTChannel* create(uint64_t aBitWidth){
+        return new LTChannel(aBitWidth);
+    }
+    uint64_t size() const{
+        std::unique_lock lk(mMutex);
+        return mQ.size();
+    }
+    PT receive();
+    bool send(PT aT);
+    void close();
+    void shutdown();
+    string dump();
+};
+
+template <class T>
+LTChannel<T>::PT LTChannel<T>::receive(){
+    PT ptr;
+    auto checkAndTake=[&]()->bool{
+        if (mShutdown){
+            mQAccess.notify_all();
+            throw ShutdownException();
+        }
+        if(!mQ.empty()){
+            ptr = std::move(mQ.front());
+                mQ.pop_front();
+                mPopedCount++;
+            return true;
+        }
+        
+        assert(mQ.empty());
+        if (mClosed){
+            mQAccess.notify_all();
+            throw CloseException();
+        }
+        return false;
+    };
+    std::unique_lock lk(mMutex);
+    mQAccess.wait(lk,checkAndTake);
+/*
+    for(;;){
+        std::unique_lock lk(mMutex);
+        if  (checkAndTake()){
+            break;
+        }
+        mQAccess.wait(lk);
+        if  (checkAndTake()){
+            break;
+        }
+    }
+*/
+    mReadyToInQ.release();
+    return ptr;
+}
+template <class T>
+bool LTChannel<T>::send(LTChannel<T>::PT aT){
+    mSentRequestCount++;
+    for(;!mClosed;){
+        {
+            std::unique_lock lk(mMutex);
+            if (mQ.size() < mSize){
+                mQ.push_back(std::move(aT));
+                if (mQ.size() >= BatchNotification){
+                    mQAccess.notify_all();
+                }else{
+                    mQAccess.notify_one();
+                }
+                mPushedCount++;
+                return true;
+            }else{//else, full, waiting for receiver to take
+                assert(mQ.size() >= mSize);
+                mBlockSenderCount++;
+            }
+        }
+        mReadyToInQ.acquire();
+    }
+    return false;
+}
+template <class T>
+void LTChannel<T>::close(){
+    {
+        std::unique_lock lk(mMutex);
+        mClosed = true;
+    }
+    mQAccess.notify_all();
+}
+template <class T>
+void LTChannel<T>::shutdown(){
+    {
+        std::unique_lock lk(mMutex);
+        mClosed = true;
+        mShutdown = true;
+    }
+    mQAccess.notify_all();
+}
+
+template <class T>
+string LTChannel<T>::dump()  {
+    string str = "Sent Request:"
+        + to_string(mSentRequestCount.load(std::memory_order_seq_cst))
+        + ", Pushed:"
+        + to_string(mPushedCount.load(std::memory_order_seq_cst))
+        + ", Poped "
+        + to_string(mPopedCount.load(std::memory_order_seq_cst))
+        + ", Sender blocked: "
+        + to_string(mBlockSenderCount.load(std::memory_order_seq_cst))
+        + ".";
+
+    return str;
+}
+template <class T>
+static Channel<T>* createChannel(string aType, uint64_t aBitWidth){
+    for (int i=0;i<aType.size();i++){
+        aType[i] = std::toupper(aType[i]);
+    }
+
+    if (aType == "LIST"){
+        cout<<"Create list based channel."<< std::endl;
+        return LTChannel<T>::create(aBitWidth);
+    }else{
+        cout<<"Create ring buffer based channel."<< std::endl;
+        return RBChannel<T>::create(aBitWidth);
+    }
+}

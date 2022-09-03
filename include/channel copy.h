@@ -21,7 +21,7 @@ const size_t SemaphoreLimitAccess = 10;
 const size_t BatchNotification = 10;
 
 template <class T>
-class Channel{
+class LTChannel:public Channel<T>{
 public:    
     typedef std::unique_ptr<T> PT;
 private:
@@ -39,7 +39,7 @@ private:
     atomic_uint64_t mPopedCount;
     atomic_uint64_t mBlockSenderCount;
 private:
-    Channel(size_t size):
+    LTChannel(size_t size):
         mReadyToInQ(1),
         mSentRequestCount(0),
         mPushedCount(0),
@@ -54,11 +54,11 @@ private:
         mClosed = false;
         mShutdown = false;
     }
-    Channel (const Channel&) = delete;
-    Channel& operator=(const Channel&) = delete;
+    LTChannel (const LTChannel&) = delete;
+    LTChannel& operator=(const LTChannel&) = delete;
 public:
-    static Channel* create(size_t size){
-        return new Channel(size);
+    static LTChannel* create(size_t size){
+        return new LTChannel(size);
     }
 
     PT receive();
@@ -69,7 +69,7 @@ public:
 };
 
 template <class T>
-Channel<T>::PT Channel<T>::receive(){
+LTChannel<T>::PT LTChannel<T>::receive(){
     PT ptr;
     auto checkAndTake=[&]()->bool{
         if (mShutdown){
@@ -108,7 +108,7 @@ Channel<T>::PT Channel<T>::receive(){
     return ptr;
 }
 template <class T>
-bool Channel<T>::send(Channel<T>::PT aT){
+bool LTChannel<T>::send(LTChannel<T>::PT aT){
     mSentRequestCount++;
     for(;!mClosed;){
         {
@@ -132,7 +132,7 @@ bool Channel<T>::send(Channel<T>::PT aT){
     return false;
 }
 template <class T>
-void Channel<T>::close(){
+void LTChannel<T>::close(){
     {
         std::unique_lock lk(mMutex);
         mClosed = true;
@@ -140,7 +140,7 @@ void Channel<T>::close(){
     mQAccess.notify_all();
 }
 template <class T>
-void Channel<T>::shutdown(){
+void LTChannel<T>::shutdown(){
     {
         std::unique_lock lk(mMutex);
         mClosed = true;
@@ -150,7 +150,7 @@ void Channel<T>::shutdown(){
 }
 
 template <class T>
-string Channel<T>::dump()  {
+string LTChannel<T>::dump()  {
     string str = "Sent Request:"
         + to_string(mSentRequestCount.load(std::memory_order_seq_cst))
         + ", Pushed:"

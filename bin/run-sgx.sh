@@ -1,8 +1,14 @@
 #!/bin/bash
-~/record/top.sh cpu.log &
+~/record/top.sh cpu-ring.log &
 disown
-gramine-sgx lit -n 1 -s 4 -t 10M | tee sgx.log &
-disown
+gramine-sgx lit ring -n 1 -s 4 -t 10M | tee sgx-ring.log &
+sleep 5
+./lit ring -n 1 -s 4 -t 10M | tee native-ring.log &
+sleep 5
+
+killall -9 top
+~/record/top.sh cpu-list.log &
+gramine-sgx lit list -n 1 -s 4 -t 10M | tee sgx-list.log &
 sleep 100
-./lit -n 1 -s 4 -t 10M | tee native.log &
-disown
+./lit list -n 1 -s 4 -t 10M | tee native.log-list &
+sleep 5

@@ -19,14 +19,16 @@
 
 using namespace std;
 
-const string usage = "Usage: program-name -n decimal(total loops:1-10000) -s decimal(service routines)  -t [1:1000000]M|m|K|k\n";
-const int np    = 2;
-const int sp    = 4;
-const int tp    = 6;
+const string usage = "Usage: program-name ring|list -n decimal(total loops:1-10000) -s decimal(service routines)  -t [1:1000000]M|m|K|k\n";
+const int typ   = 1;
+const int np    = 2+1;
+const int sp    = 4+1;
+const int tp    = 6+1;
+const int number = 8;
 
 
 int main(int argc, char **argv){
-    if ((argc !=7) || (string(argv[1]) != "-n")){
+    if ((argc !=number) || (string(argv[np-1]) != "-n")){
         cout << usage << endl;
         exit(0);
     }
@@ -61,10 +63,11 @@ int main(int argc, char **argv){
     string si = argv[sp];
 	int s = stoi(si);
 
-	cout << "Testing started with parameters:entries:"<< t*mk << ", query loops:" << n <<
+	string chType = argv[typ];
+	cout << "Testing started with parameters:channel type: " << chType<<", entries:"<< t*mk << ", query loops:" << n <<
 		", service threads:" << s << std::endl;
 
-    Service::init(s)->generateTargets(t*mk);
+    Service::init(chType, s)->generateTargets(t*mk);
 	Service::getInstance()->perfTest(n);
 	return 0;
 }

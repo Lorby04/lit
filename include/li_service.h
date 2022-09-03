@@ -44,17 +44,17 @@ class Service{
     static Service* mInstance;
 
 private:    
-    Service(int n);
+    Service(string aChType, int n);
     void start();
-    static void create(int n){
-        Service::mInstance = new Service(n);
+    static void create(string aChType, int n){
+        Service::mInstance = new Service(aChType,n);
     }
     void worker(int aId);
     string statistics() ;
     bool query(Target &aTarget);
 public: 
-    static Service *init(int n){
-        std::call_once(Service::mfInst,Service::create,n);
+    static Service *init(string aChType, int n){
+        std::call_once(Service::mfInst,Service::create,aChType,n);
         return Service::mInstance;
     }
     static Service *getInstance(){
