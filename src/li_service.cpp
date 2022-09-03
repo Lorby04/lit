@@ -23,7 +23,7 @@ Service::Service(int n):
     }else if (n>=1000){
         mThreads =1000;
     }
-    mChannel = Channel<Message>::create(1000);
+    mChannel = Channel<Message>::create(12);
     mTotalEntries = 10000000;
 }
 
