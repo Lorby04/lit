@@ -35,14 +35,39 @@ public:
     virtual string dump()=0;
 };
 
+typedef bool (*Predicate)();
+class AtomicCV{
+private:
+    atomic_uint_fast32_t mCv;
+public:  
+    template<class LOCK, class Predicate>
+    void wait( LOCK& lock,  Predicate stop_waiting ){
+        while(!stop_waiting()){
+            lock.unlock();
+            mCv.wait(mCv.load());
+            lock.lock();
+        }
+    }
+
+    void notify_one(){
+        mCv++;
+        mCv.notify_one();
+    }
+
+    void notify_all(){
+        mCv++;
+        mCv.notify_all();
+    }
+};
+
 template <class T>
 class RBChannel:public Channel<T>{
 public:    
     typedef std::unique_ptr<T> PT;
 private:
-    std::condition_variable_any mQAccess;
+//    std::condition_variable_any mQAccess;
+    AtomicCV mQAccess;
 //    std::counting_semaphore<SemaphoreLimitAccess> mQAccess;
-
     mutable std::shared_mutex mMutex;
 
     PT *mQ;
@@ -237,7 +262,8 @@ class LTChannel:public Channel<T>{
 public:    
     typedef std::unique_ptr<T> PT;
 private:
-    std::condition_variable mQAccess;
+//  std::condition_variable 
+    AtomicCV mQAccess;
 //    std::counting_semaphore<SemaphoreLimitAccess> mQAccess;
     mutable std::mutex mMutex;
     std::binary_semaphore mReadyToInQ;
