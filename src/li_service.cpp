@@ -6,6 +6,7 @@
 #include <thread>
 #include <condition_variable>
 #include <vector>
+#include <atomic>
 #include "li_target.h"
 #include "li_service.h"
 

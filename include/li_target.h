@@ -9,10 +9,19 @@
 #include <vector>
 #include <iostream>
 #include <functional>
+#include <atomic>
+#include "atomic_mutex.h"
 
 using namespace std;
+#if true
+#define TargetSharedMutex SharedMutex //std::shared_mutex //
+#define TargetSharedLock ReadLock //std::shared_lock //
+#define TargetUniqueLock WriteLock //std::unique_lock //
+#else
 #define TargetSharedMutex std::shared_mutex //
 #define TargetSharedLock std::shared_lock //
+#define TargetUniqueLock std::unique_lock //
+#endif
 
 class Target {
 	string mKey;
@@ -61,13 +70,13 @@ public:
 public:
     ~TargetCollectionMap(){};
     virtual bool insert(Target &&aTarget){
-        unique_lock ul(mMutex);
+        TargetUniqueLock ul(mMutex);
         const auto [it, success] = mMap.insert({forward<Target>(aTarget),true});
         return success;
     }
 
     virtual bool erase(Target &aTarget){
-        unique_lock ul(mMutex);
+        TargetUniqueLock ul(mMutex);
         mMap.erase(aTarget);
         return true;
     }
@@ -92,13 +101,13 @@ public:
     }
     ~TargetCollectionUMap(){};
     virtual bool insert(Target &&aTarget){
-        unique_lock ul(mMutex);
+        TargetUniqueLock ul(mMutex);
         const auto [it, success] = mMap.insert({forward<Target>(aTarget),true});
         return success;
     }
 
     virtual bool erase(Target &aTarget){
-        unique_lock ul(mMutex);
+        TargetUniqueLock ul(mMutex);
         mMap.erase(aTarget);
         return true;
     }

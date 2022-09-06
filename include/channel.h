@@ -12,10 +12,18 @@
 #include <list>
 #include <cassert>
 #include <atomic>
+#include "atomic_mutex.h"
 
-//
-#define ChanSharedMutex std::mutex //
-#define ChanSharedLock std::unique_lock //
+#if true
+#define ChanSharedMutex std::mutex //SharedMutex //
+#define ChanSharedLock std::unique_lock //ReadLock //
+#define ChanUniqueLock std::unique_lock //WriteLock //
+#else //#define ChanShared
+#define ChanSharedMutex SharedMutex //
+#define ChanSharedLock ReadLock //
+#define ChanUniqueLock WriteLock //
+#endif
+
 
 const size_t defaultSize = 1;
 class ShutdownException{};
@@ -199,7 +207,7 @@ bool RBChannel<T>::send(RBChannel<T>::PT aT){
     mSentRequestCount++;
     for(;!mClosed;){
         {
-            std::unique_lock lk(mMutex);
+            ChanUniqueLock lk(mMutex);
             uint64_t rindex = mRIndex.load();
             //cout <<"W:rindex " << rindex << ", RIndex 5:"<<mRIndex.load() << ", WIndex: "<<mWIndex <<endl;
 
@@ -229,19 +237,23 @@ bool RBChannel<T>::send(RBChannel<T>::PT aT){
 template <class T>
 void RBChannel<T>::close(){
     {
-        std::unique_lock lk(mMutex);
+        cout <<"Prepare to close the channel" << endl;
+        ChanUniqueLock lk(mMutex);
         mClosed = true;
         //cout << "Close RBChannel" << std::endl;
     }
+    cout <<"The channel is closed" << endl;
     mQAccess.notify_all();
 }
 template <class T>
 void RBChannel<T>::shutdown(){
     {
-        std::unique_lock lk(mMutex);
+        cout <<"The channel is being shutdown" << endl;
+        ChanUniqueLock lk(mMutex);
         mClosed = true;
         mShutdown = true;
     }
+    cout <<"The channel is shutdown" << endl;
     mQAccess.notify_all();
 }
 
