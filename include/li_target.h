@@ -11,6 +11,8 @@
 #include <functional>
 
 using namespace std;
+#define TargetSharedMutex std::shared_mutex //
+#define TargetSharedLock std::shared_lock //
 
 class Target {
 	string mKey;
@@ -54,7 +56,7 @@ public:
 
 class TargetCollectionMap:public TargetCollectionBase{
 public:    
-    mutable std::shared_mutex mMutex;
+    mutable TargetSharedMutex mMutex;
     std::map<Target, bool> mMap;
 public:
     ~TargetCollectionMap(){};
@@ -71,18 +73,18 @@ public:
     }
 
     virtual bool found(Target &aTarget){
-        shared_lock sl(mMutex);
+        TargetSharedLock sl(mMutex);
         return (mMap.find(aTarget) != mMap.end());    
     }
     virtual size_t size(){
-        shared_lock sl(mMutex);
+        TargetSharedLock sl(mMutex);
         return mMap.size();
     }
 };
 
 class TargetCollectionUMap:public TargetCollectionBase{
 public:    
-    mutable std::shared_mutex mMutex;
+    mutable TargetSharedMutex mMutex;
     std::unordered_map<Target,bool> mMap;
 public:
     TargetCollectionUMap(size_t aCapacity)
@@ -102,11 +104,11 @@ public:
     }
 
     virtual bool found(Target &aTarget){
-        shared_lock sl(mMutex);
+        TargetSharedLock sl(mMutex);
         return (mMap.find(aTarget) != mMap.end());    
     }
     virtual size_t size(){
-        shared_lock sl(mMutex);
+        TargetSharedLock sl(mMutex);
         return mMap.size();
     }
 };
