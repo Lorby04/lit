@@ -13,6 +13,10 @@
 #include <cassert>
 #include <atomic>
 
+//
+#define ChanSharedMutex std::mutex //
+#define ChanSharedLock std::unique_lock //
+
 const size_t defaultSize = 1;
 class ShutdownException{};
 class CloseException{};
@@ -68,7 +72,7 @@ private:
 //    std::condition_variable_any mQAccess;
     AtomicCV mQAccess;
 //    std::counting_semaphore<SemaphoreLimitAccess> mQAccess;
-    mutable std::shared_mutex mMutex;
+    mutable ChanSharedMutex mMutex;
 
     PT *mQ;
     atomic_uint64_t mRIndex; // index of entry that can be read unless it is the same as mWIndex
@@ -134,7 +138,7 @@ public:
     }
 
     uint64_t size() const{
-        std::shared_lock lk(mMutex);
+        ChanSharedLock lk(mMutex);
         return len(mWIndex, mRIndex.load());
     }
 
@@ -173,7 +177,7 @@ RBChannel<T>::PT RBChannel<T>::receive(){
         }
         return false;
     };
-    std::shared_lock lk(mMutex);
+    ChanSharedLock lk(mMutex);
     mQAccess.wait(lk,checkAndTake);
 /*
     for(;;){
