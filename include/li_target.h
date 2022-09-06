@@ -3,10 +3,12 @@
 
 #include <string>
 #include <map>
+#include <unordered_map>
 #include <mutex>
 #include <shared_mutex>
 #include <vector>
 #include <iostream>
+#include <functional>
 
 using namespace std;
 
@@ -31,55 +33,144 @@ public:
     const string& type() const{
         return mType;
     }
+};
+template<>
+struct std::hash<Target>
+{
+    std::size_t operator()(Target const& t) const noexcept
+    {
+        return std::hash<std::string>{}(t.type()+t.key());
+    }
+};
 
+class TargetCollectionBase{
+public:    
+    virtual ~TargetCollectionBase(){};
+    virtual bool insert(Target &&aTarget)=0;
+    virtual bool erase(Target &aTarget)=0;
+    virtual bool found(Target &aTarget)=0;
+    virtual size_t size()=0;
+};
+
+class TargetCollectionMap:public TargetCollectionBase{
+public:    
+    mutable std::shared_mutex mMutex;
+    std::map<Target, bool> mMap;
+public:
+    ~TargetCollectionMap(){};
+    virtual bool insert(Target &&aTarget){
+        unique_lock ul(mMutex);
+        const auto [it, success] = mMap.insert({forward<Target>(aTarget),true});
+        return success;
+    }
+
+    virtual bool erase(Target &aTarget){
+        unique_lock ul(mMutex);
+        mMap.erase(aTarget);
+        return true;
+    }
+
+    virtual bool found(Target &aTarget){
+        shared_lock sl(mMutex);
+        return (mMap.find(aTarget) != mMap.end());    
+    }
+    virtual size_t size(){
+        shared_lock sl(mMutex);
+        return mMap.size();
+    }
+};
+
+class TargetCollectionUMap:public TargetCollectionBase{
+public:    
+    mutable std::shared_mutex mMutex;
+    std::unordered_map<Target,bool> mMap;
+public:
+    TargetCollectionUMap(size_t aCapacity)
+        : mMap(aCapacity){
+    }
+    ~TargetCollectionUMap(){};
+    virtual bool insert(Target &&aTarget){
+        unique_lock ul(mMutex);
+        const auto [it, success] = mMap.insert({forward<Target>(aTarget),true});
+        return success;
+    }
+
+    virtual bool erase(Target &aTarget){
+        unique_lock ul(mMutex);
+        mMap.erase(aTarget);
+        return true;
+    }
+
+    virtual bool found(Target &aTarget){
+        shared_lock sl(mMutex);
+        return (mMap.find(aTarget) != mMap.end());    
+    }
+    virtual size_t size(){
+        shared_lock sl(mMutex);
+        return mMap.size();
+    }
 };
 
 class TargetSet{
-    mutable std::shared_mutex mMutex;
-    std::map<Target, bool> mMap;
+    TargetCollectionBase *mCollection;
 
     std::vector<string> mTypes;
     static std::once_flag mfInst;
     static TargetSet* mInstance;
 
 private:    
-    TargetSet(){
+    TargetSet(string aType, size_t aCapacity){
         mTypes.push_back("From");
         mTypes.push_back("To");
         mTypes.push_back("PAI"); 
         mTypes.push_back("Location");
+
+        for (int i=0;i<aType.size();i++){
+            aType[i] = std::toupper(aType[i]);
+        }
+
+        if (aType == "HASH"){
+            cout<<"Create hash table."<< std::endl;
+            mCollection = new TargetCollectionUMap(aCapacity);
+        }else{
+            cout<<"Create map."<< std::endl;
+            mCollection = new TargetCollectionMap();        
+        }        
     };
-    static void create(){
-        TargetSet::mInstance = new TargetSet();
+
+    static void create(string aType, size_t aCapacity){
+        TargetSet::mInstance = new TargetSet(aType,aCapacity);
     }
     static TargetSet *getInstance(){
-        std::call_once(TargetSet::mfInst,TargetSet::create);
         return mInstance;
     }
 
     bool insert_(Target &&aTarget){
-        unique_lock ul(mMutex);
-        const auto [it, success] = mMap.insert({forward<Target>(aTarget),true});
-        return success;
+        return mCollection->insert(forward<Target>(aTarget));
     }
 
     bool erase_(Target &aTarget){
-        unique_lock ul(mMutex);
-        mMap.erase(aTarget);
-        return true;
+        return mCollection->erase(aTarget);
     }
 
     bool found_(Target &aTarget){
-        shared_lock sl(mMutex);
-        return (mMap.find(aTarget) != mMap.end());    
+        return mCollection->found(aTarget);    
     }
+
     size_t size_(){
-        shared_lock sl(mMutex);
-        return mMap.size();
+        return mCollection->size();
     }
 
 public:
+    ~TargetSet(){
+        delete mCollection;
+    }
     static std::vector<string> &types() { return TargetSet::getInstance()->mTypes; }
+    static TargetSet *init(string aType, size_t aCapacity){
+        std::call_once(TargetSet::mfInst,TargetSet::create, aType,aCapacity);
+        return TargetSet::getInstance();
+    }
+
     static bool insert(Target &&aTarget){
         TargetSet::getInstance()->insert_(forward<Target>(aTarget));
         return true;
@@ -95,4 +186,7 @@ public:
     }
 };
 extern bool operator<(const Target &t1, const Target &t2);
+extern bool operator==(const Target &t1, const Target &t2);
+
+
 #endif

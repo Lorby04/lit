@@ -19,12 +19,13 @@
 
 using namespace std;
 
-const string usage = "Usage: program-name ring|list -n decimal(total loops:1-10000) -s decimal(service routines)  -t [1:1000000]M|m|K|k\n";
+const string usage = "Usage: program-name ring|list -n decimal(total loops:1-10000) -s decimal(service routines)  -t [1:1000000]M|m|K|k map|hash\n";
 const int typ   = 1;
 const int np    = 2+1;
 const int sp    = 4+1;
 const int tp    = 6+1;
-const int number = 8;
+const int storage_index = 8;
+const int number = 9;
 
 
 int main(int argc, char **argv){
@@ -64,10 +65,15 @@ int main(int argc, char **argv){
 	int s = stoi(si);
 
 	string chType = argv[typ];
+	string storage = argv[storage_index];
 	cout << "Testing started with parameters:channel type: " << chType<<", entries:"<< t*mk << ", query loops:" << n <<
-		", service threads:" << s << std::endl;
-
+		", service threads:" << s << ", storage:"<< storage<<std::endl;
+	
+	atomic_uint64_t test = 0;
+	cout << "Atomic "<<(test.is_lock_free()?"IS":"is NOT") <<" lock free."<<std::endl;
+	TargetSet::init(storage, t*mk);
     Service::init(chType, s)->generateTargets(t*mk);
 	Service::getInstance()->perfTest(n);
+
 	return 0;
 }

@@ -60,7 +60,7 @@ private:
     atomic_uint64_t mPopedCount;
     atomic_uint64_t mBlockSenderCount;
 private:
-    RBChannel(int aBitWidth):
+    RBChannel(uint64_t aBitWidth):
         mRIndex(0),
         mWIndex(0),
         mReadyToInQ(1),
