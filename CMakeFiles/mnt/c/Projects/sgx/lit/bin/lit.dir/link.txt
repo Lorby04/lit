@@ -1,1 +1,1 @@
-/usr/bin/c++ -rdynamic CMakeFiles//mnt/c/Projects/sgx/lit/bin/lit.dir/src/li_service.cpp.o CMakeFiles//mnt/c/Projects/sgx/lit/bin/lit.dir/src/li_target.cpp.o CMakeFiles//mnt/c/Projects/sgx/lit/bin/lit.dir/src/lit.cpp.o -o /mnt/c/Projects/sgx/lit/bin/lit 
+/usr/bin/c++ -g -rdynamic CMakeFiles//mnt/c/Projects/sgx/lit/bin/lit.dir/src/li_service.cpp.o CMakeFiles//mnt/c/Projects/sgx/lit/bin/lit.dir/src/li_target.cpp.o CMakeFiles//mnt/c/Projects/sgx/lit/bin/lit.dir/src/lit.cpp.o -o /mnt/c/Projects/sgx/lit/bin/lit 
