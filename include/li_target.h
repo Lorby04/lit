@@ -13,14 +13,15 @@
 #include "atomic_mutex.h"
 
 using namespace std;
-#if true
-#define TargetSharedMutex SharedMutex //std::shared_mutex //
-#define TargetSharedLock ReadLock //std::shared_lock //
-#define TargetUniqueLock WriteLock //std::unique_lock //
-#else
+#define TARGET_USE_MUTEX true
+#if TARGET_USE_MUTEX
 #define TargetSharedMutex std::shared_mutex //
 #define TargetSharedLock std::shared_lock //
 #define TargetUniqueLock std::unique_lock //
+#else
+#define TargetSharedMutex SharedMutex //std::shared_mutex //
+#define TargetSharedLock ReadLock //std::shared_lock //
+#define TargetUniqueLock WriteLock //std::unique_lock //
 #endif
 
 class Target {
