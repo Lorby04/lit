@@ -1,4 +1,6 @@
 # Lit manifest file example
+sgx.profile.enable = "all"
+sgx.profile.with_stack = true
 
 ################################## GRAMINE ####################################
 
@@ -67,15 +69,13 @@ fs.mounts = [
 # This allows to debug Gramine with the application using GDB, read perf
 # counters and enable SGX statistics. Note that this option is *insecure*!
 sgx.debug = true
-sgx.profile.enable = "all"
-sgx.profile.with_stack = true
 
 # Set enclave size (somewhat arbitrarily) to 1024MB. Recall that SGX v1 requires
 # to specify enclave size at enclave creation time. If Redis exhausts these
 # 1024MB then it will start failing with random errors. Greater enclave sizes
 # result in longer startup times, smaller enclave sizes are not enough for
 # typical Redis workloads.
-sgx.enclave_size = "4G"
+sgx.enclave_size = "1G"
 
 # Set maximum number of in-enclave threads (somewhat arbitrarily) to 8. Recall
 # that SGX v1 requires to specify the maximum number of simulteneous threads at
