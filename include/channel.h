@@ -14,10 +14,17 @@
 #include <atomic>
 #include "atomic_mutex.h"
 
+#define USE_SPIN_LOCK true
 #define CHAN_USE_MUTEX false
 #define CHAN_READ_AS_WRITE true
 
-#if CHAN_USE_MUTEX
+
+#if USE_SPIN_LOCK
+#define ChanSharedMutex SpinLockMutex //SharedMutex //
+#define ChanSharedLock WriteLock //ReadLock //
+#define ChanUniqueLock WriteLock //WriteLock //
+
+#elif CHAN_USE_MUTEX
 
 #if CHAN_READ_AS_WRITE
 #define ChanSharedMutex std::mutex //SharedMutex //

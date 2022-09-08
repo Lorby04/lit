@@ -7,8 +7,28 @@
 #include <memory>
 #include <cassert>
 #include <atomic>
+#include <pthread.h>
 
 using namespace std;
+class SpinLockMutex{
+    pthread_spinlock_t mLock;
+public:
+    SpinLockMutex(){
+        cout <<"Init spinlock"<<endl;
+        pthread_spin_init(&mLock, PTHREAD_PROCESS_PRIVATE);
+    }
+    ~SpinLockMutex(){
+        pthread_spin_destroy(&mLock);
+    }
+    void wLock(){
+        pthread_spin_lock(&mLock);
+    }
+    void wUnlock(){
+        pthread_spin_unlock(&mLock);
+    }
+};
+
+
 #define SMX_UNLOCKED  0
 class SharedMutex{
 private:    
