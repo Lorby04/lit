@@ -14,7 +14,7 @@
 #include <atomic>
 #include "atomic_mutex.h"
 
-#define CHAN_USE_MUTEX true
+#define CHAN_USE_MUTEX false
 #define CHAN_READ_AS_WRITE true
 
 #if CHAN_USE_MUTEX
@@ -31,11 +31,13 @@
 
 #else //#define ChanShared
 
-#define ChanSharedMutex SharedMutex //
+
 
 #if CHAN_READ_AS_WRITE
+#define ChanSharedMutex Mutex //
 #define ChanSharedLock WriteLock //
 #else
+#define ChanSharedMutex SharedMutex //
 #define ChanSharedLock ReadLock //
 #endif
 
