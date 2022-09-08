@@ -18,7 +18,8 @@ private:
 private:
     uint_fast64_t getLocked(){ 
         auto count = mWCount.load();
-        if (++count == 0){
+        ++count;
+        if (count == 0)[[unlikely]]{
             ++count;
         }
         mWCount.store(count);
@@ -50,11 +51,11 @@ public:
     }
     void wUnlock(){
         uint_fast64_t smx_unlocked = SMX_UNLOCKED;
-        assert(mW.load() != smx_unlocked);
+        assert(mW.load() != SMX_UNLOCKED);
         //{
         //    cout << "mW after exchange:"<<mW.load() <<",smx_locked: "<<smx_locked << ",smx_unlocked: "<<smx_unlocked <<endl;
         //}
-        mW.store(smx_unlocked);
+        mW.store(SMX_UNLOCKED);
         mW.notify_one();
     }
 
@@ -87,13 +88,14 @@ private:
     atomic_uint_fast64_t mW;
     atomic_uint_fast64_t mWCount;
 private:
-    uint_fast64_t getLocked(){ 
-        auto count = mWCount.load();
-        if (++count == 0){
-            ++count;
+    uint_fast64_t getLocked(){
+        auto c = mWCount.load();
+        ++c;
+        if (c == 0) [[unlikely]]{
+            ++c;
         }
-        mWCount.store(count);
-        return count;
+        mWCount.store(c);
+        return c;
     }
 public:
     Mutex():
@@ -115,12 +117,11 @@ public:
         assert(mW.load() == smx_locked);
     }
     void wUnlock(){
-        uint_fast64_t smx_unlocked = SMX_UNLOCKED;
-        assert(mW.load() != smx_unlocked);
+        assert(mW.load() != SMX_UNLOCKED);
         //{
         //    cout << "mW after exchange:"<<mW.load() <<",smx_locked: "<<smx_locked << ",smx_unlocked: "<<smx_unlocked <<endl;
         //}
-        mW.store(smx_unlocked);
+        mW.store(SMX_UNLOCKED);
         mW.notify_one();
     }
 
