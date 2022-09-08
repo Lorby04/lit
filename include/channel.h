@@ -20,11 +20,15 @@
 
 
 #if USE_SPIN_LOCK
-#define ChanSharedMutex SpinLockMutex //SharedMutex //
-#define ChanSharedLock WriteLock //ReadLock //
+#define ChanUniqueMutex SpinLockMutex
 #define ChanUniqueLock WriteLock //WriteLock //
 
+#define ChanSharedMutex SpinLockMutex //SharedMutex //
+#define ChanSharedLock WriteLock //ReadLock //
+
 #elif CHAN_USE_MUTEX
+#define ChanUniqueMutex std::mutex
+#define ChanUniqueLock std::unique_lock //WriteLock //
 
 #if CHAN_READ_AS_WRITE
 #define ChanSharedMutex std::mutex //SharedMutex //
@@ -34,11 +38,10 @@
 #define ChanSharedLock std::shared_lock //ReadLock //
 #endif
 
-#define ChanUniqueLock std::unique_lock //WriteLock //
-
 #else //#define ChanShared
 
-
+#define ChanUniqueMutex Mutex
+#define ChanUniqueLock WriteLock //
 
 #if CHAN_READ_AS_WRITE
 #define ChanSharedMutex Mutex //
@@ -48,7 +51,6 @@
 #define ChanSharedLock ReadLock //
 #endif
 
-#define ChanUniqueLock WriteLock //
 #endif
 
 
@@ -308,7 +310,7 @@ private:
 //  std::condition_variable 
     AtomicCV mQAccess;
 //    std::counting_semaphore<SemaphoreLimitAccess> mQAccess;
-    mutable std::mutex mMutex;
+    mutable ChanUniqueMutex mMutex;
     std::binary_semaphore mReadyToInQ;
     std::list<PT> mQ;
     bool mClosed;
@@ -342,7 +344,7 @@ public:
         return new LTChannel(aBitWidth);
     }
     uint64_t size() const{
-        std::unique_lock lk(mMutex);
+        ChanUniqueLock lk(mMutex);
         return mQ.size();
     }
     PT receive();
@@ -374,7 +376,7 @@ LTChannel<T>::PT LTChannel<T>::receive(){
         }
         return false;
     };
-    std::unique_lock lk(mMutex);
+    ChanUniqueLock lk(mMutex);
     mQAccess.wait(lk,checkAndTake);
 /*
     for(;;){
@@ -396,7 +398,7 @@ bool LTChannel<T>::send(LTChannel<T>::PT aT){
     mSentRequestCount++;
     for(;!mClosed;){
         {
-            std::unique_lock lk(mMutex);
+            ChanUniqueLock lk(mMutex);
             if (mQ.size() < mSize){
                 mQ.push_back(std::move(aT));
                 if (mQ.size() >= BatchNotification){
@@ -418,7 +420,7 @@ bool LTChannel<T>::send(LTChannel<T>::PT aT){
 template <class T>
 void LTChannel<T>::close(){
     {
-        std::unique_lock lk(mMutex);
+        ChanUniqueLock lk(mMutex);
         mClosed = true;
     }
     mQAccess.notify_all();
@@ -426,7 +428,7 @@ void LTChannel<T>::close(){
 template <class T>
 void LTChannel<T>::shutdown(){
     {
-        std::unique_lock lk(mMutex);
+        ChanUniqueLock lk(mMutex);
         mClosed = true;
         mShutdown = true;
     }
