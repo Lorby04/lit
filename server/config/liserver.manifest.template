@@ -1,6 +1,6 @@
 # Lit manifest file example
-sgx.profile.enable = "all"
-sgx.profile.with_stack = false
+# sgx.profile.enable = "all"
+# sgx.profile.with_stack = false
 
 ################################## GRAMINE ####################################
 
