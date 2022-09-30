@@ -1,0 +1,61 @@
+syntax="proto3";
+package LI;
+
+option cc_generic_services = true;
+enum TypeOfTarget{
+    FROM = 0;
+    TO = 1;
+    PAI = 2;
+    LOCATION = 3;
+};
+
+message Target{
+    TypeOfTarget type_of_key = 10;
+    string key = 20;
+}
+
+message QueryRequest {
+    Target target = 10; 
+};
+
+message QueryResponse {
+    bool found = 1;
+};
+
+message AddRequest {
+    Target target = 10; 
+};
+
+message AddResponse {
+    bool success = 1;
+};
+
+message DelRequest {
+    Target target = 10; 
+};
+
+message DelResponse {
+    bool success = 1;
+};
+
+message ListRequest {
+};
+
+message ListResponse {
+};
+
+
+message PurgeRequest {
+};
+
+message PurgeResponse {
+};
+
+
+service LiService {
+    rpc Query(QueryRequest) returns (QueryResponse);
+    rpc Add(AddRequest) returns (AddResponse);
+    rpc Del(DelRequest) returns (DelResponse);
+    rpc List(ListRequest) returns (ListResponse);
+    rpc Purge(PurgeRequest) returns (PurgeResponse);
+};
