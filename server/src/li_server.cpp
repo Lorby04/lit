@@ -22,7 +22,7 @@ namespace LI{
                   << "] from " << cntl->remote_side() 
                   << " to " << cntl->local_side()
                   << ": " << request->DebugString()
-                  << ", URI: " << cntl->http_request().uri();
+                  << ", headline: " << cntl->http_request().method()<<" "<<cntl->http_request().uri();
 
         // Fill response.
         bool found = TargetCache::found(request->target());
@@ -54,7 +54,7 @@ namespace LI{
                   << "] from " << cntl->remote_side() 
                   << " to " << cntl->local_side()
                   << ": " << request->DebugString()
-                  << ", URI: " << cntl->http_request().uri();
+                  << ", headline: " << cntl->http_request().method()<<" "<<cntl->http_request().uri();
 
         // Fill response.
         // Target in the request is moved out after the call
@@ -62,6 +62,7 @@ namespace LI{
         if (!success){
             cntl->http_response().set_status_code(brpc::HTTP_STATUS_INTERNAL_SERVER_ERROR);
         }
+        LOG(WARNING) << "Total entries: "<< TargetCache::size();
 
         response->set_success(success);
 
@@ -88,7 +89,7 @@ namespace LI{
                   << "] from " << cntl->remote_side() 
                   << " to " << cntl->local_side()
                   << ": " << request->DebugString()
-                  << ", URI: " << cntl->http_request().uri();
+                  << ", headline: " << cntl->http_request().method()<<" "<<cntl->http_request().uri();
 
         // Fill response.
         // Target in the request is moved out after the call

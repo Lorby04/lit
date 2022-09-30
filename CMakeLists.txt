@@ -49,9 +49,9 @@ if (NOT THRIFTNB_LIB)
     set(THRIFTNB_LIB "")
 endif()
 
-find_path(GPERFTOOLS_INCLUDE_DIR NAMES gperftools/heap-profiler.h)
-find_library(GPERFTOOLS_LIBRARIES NAMES tcmalloc_and_profiler)
-include_directories(${GPERFTOOLS_INCLUDE_DIR})
+#find_path(GPERFTOOLS_INCLUDE_DIR NAMES gperftools/heap-profiler.h)
+#find_library(GPERFTOOLS_LIBRARIES NAMES tcmalloc_and_profiler)
+#include_directories(${GPERFTOOLS_INCLUDE_DIR})
 
 find_path(BRPC_INCLUDE_PATH NAMES brpc/server.h)
 #message("BRPC include path: ${BRPC_INCLUDE_PATH}")
@@ -96,20 +96,20 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
 endif()
 
 set(CMAKE_CPP_FLAGS "${DEFINE_CLOCK_GETTIME} -DGFLAGS_NS=${GFLAGS_NS}")
-set(CMAKE_CXX_FLAGS "${CMAKE_CPP_FLAGS} -DNDEBUG -O2 -D__const__=__unused__ -pipe -W -Wall -Wno-unused-parameter -fPIC -fno-omit-frame-pointer")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DBRPC_ENABLE_CPU_PROFILER")
+set(CMAKE_CXX_FLAGS "${CMAKE_CPP_FLAGS} -DNDEBUG -O2 -D__const__=__unused__ -pipe -W -Wall -Wno-unused-parameter") # -fPIC -fno-omit-frame-pointer")
+#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DBRPC_ENABLE_CPU_PROFILER")
 
-if(CMAKE_VERSION VERSION_LESS "3.1.3")
-    if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
-        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
-    endif()
-    if(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
-        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
-    endif()
-else()
-    set(CMAKE_CXX_STANDARD 11)
-    set(CMAKE_CXX_STANDARD_REQUIRED ON)
-endif()
+#if(CMAKE_VERSION VERSION_LESS "3.1.3")
+#    if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+#        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+#    endif()
+#    if(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+#        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+#    endif()
+#else()
+#    set(CMAKE_CXX_STANDARD 11)
+#    set(CMAKE_CXX_STANDARD_REQUIRED ON)
+#endif()
 
 find_path(LEVELDB_INCLUDE_PATH NAMES leveldb/db.h)
 find_library(LEVELDB_LIB NAMES leveldb)
@@ -150,8 +150,9 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
         "-framework Security"
         "-framework Foundation"
         "-Wl,-U,_MallocExtension_ReleaseFreeMemory"
-        "-Wl,-U,_ProfilerStart"
-        "-Wl,-U,_ProfilerStop")
+#        "-Wl,-U,_ProfilerStart"
+#        "-Wl,-U,_ProfilerStop"
+        )
 endif()
 
 add_subdirectory(server)

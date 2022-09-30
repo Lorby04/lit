@@ -19,11 +19,10 @@ bool LiClient::addTarget(Target &aTarget) {
     // the response comes back or error occurs(including timedout).
     cntl.http_request().set_method(brpc::HTTP_METHOD_POST);
     cntl.http_request().uri() = url;
-    LOG(WARNING) << "Before add cntl";
 
     LiService_Stub stub(mChannel.get());
     stub.Add(&cntl, &request, &response, NULL);
-    LOG(WARNING) << "After add cntl";
+
     if (!cntl.Failed()) {
         LOG(INFO) << "Received response from " << cntl.remote_side()
             << ", to " << cntl.local_side()
