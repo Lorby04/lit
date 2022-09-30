@@ -40,3 +40,13 @@ build/.cmake/api/v1/reply/directory-server-Debug-244843e92778ba082abc.json
 build/.cmake/api/v1/reply/target-liserver-Debug-ddea6bc68060608d5d83.json
 build/.cmake/api/v1/reply/index-2022-09-29T15-22-33-0423.json
 .vscode/settings.json
+build/.cmake/api/v1/reply/cache-v2-de428010fe086b8c615b.json
+build/.cmake/api/v1/reply/cmakeFiles-v1-b24f71b004e062a3cc12.json
+build/.cmake/api/v1/reply/codemodel-v2-d1d272d47c1050120e8b.json
+build/.cmake/api/v1/reply/directory-client-Debug-eda4c8a4dacec2844350.json
+build/.cmake/api/v1/reply/index-2022-09-30T17-55-29-0014.json
+build/.cmake/api/v1/reply/target-liclient-Debug-6f0302f3f924edb6f8c4.json
+build/.cmake/api/v1/reply/target-liserver-Debug-d518b479d9d37176240d.json
+client/bin/liclient
+client/include/li_client copy.h
+server/bin/liserver
