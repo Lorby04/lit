@@ -15,7 +15,7 @@
 
 using namespace std;
 using namespace LI;
-
+DEFINE_string(task, "add", "Task. Available values: add, query");
 DEFINE_int32(parallel_queries, 2, "Number of processes to query");
 DEFINE_int32(parallel_adds, 2, "Number of threads to add");
 DEFINE_uint64(target_num, 100, "Number of targets to be added");
@@ -423,12 +423,14 @@ int main(int argc, char* argv[]) {
 
     srand(time(NULL));
     int r = rand()%2;
-    if (r == 0){
+    if (FLAGS_task == "add"){
+        r = 0;
         if (pthread_create(&pids[0], NULL, threadAdd, nullptr) != 0) {
             LOG(ERROR) << "Fail to create pthread for add";
             return -1;
         }
     }else{
+        r = 1;
         if (pthread_create(&pids[1], NULL, threadQuery, nullptr) != 0) {
             LOG(ERROR) << "Fail to create pthread for add";
             return -1;

@@ -15,7 +15,7 @@
 # specific language governing permissions and limitations
 # under the License.
 
-cmake_minimum_required(VERSION 3.20)
+cmake_minimum_required(VERSION 3.18)
 project(lit C CXX)
 SET(CMAKE_CXX_STANDARD 20)
 option(LINK_SO "Whether examples are linked dynamically" OFF)
